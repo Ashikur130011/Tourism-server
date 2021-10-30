@@ -25,7 +25,7 @@ async function run() {
         console.log('database connected');
 
         //GET PACKAGE API
-        app.get('/packages', async (req, res) => {
+        app.get('/ticket', async (req, res) => {
             const cursor = packageCollection.find({});
             const packages = await cursor.toArray();
             res.send(packages);
