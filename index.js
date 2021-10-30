@@ -21,15 +21,17 @@ async function run() {
         await client.connect();
         const database = client.db('The-Travel');
         const packageCollection = database.collection('package');
+        const bookingCollection = database.collection('booking')
         console.log('database connected');
 
-        //GET API
+        //GET PACKAGE API
         app.get('/packages', async (req, res) => {
             const cursor = packageCollection.find({});
             const packages = await cursor.toArray();
             res.send(packages);
         })
 
+        
         //GET SINGLE API
         app.get('/packages/:id', async (req, res) => {
             const id = req.params.id;
@@ -38,7 +40,7 @@ async function run() {
             res.send(package)
         })
 
-        //POST API
+        //POST PACKAGE API
         app.post('/package', async(req, res)=> {
             const service = req.body;
             const result = await packageCollection.insertOne(service);
@@ -46,12 +48,34 @@ async function run() {
             res.json(result)
         })
 
-        //DELETE API
-        app.delete('/package/:id', async (req, res) => {
+        //POST BOOKING API
+        app.post('/booking', async (req, res)=> {
+            const cursor = req.body;
+            const result = await bookingCollection.insertOne(cursor)
+            console.log(result);
+            res.json(result)
+
+        })
+        //GET BOOKING API
+        app.get('/booking', async(req, res) => {
+            const booking=await bookingCollection.find({}).toArray();
+            res.json(booking)
+        })
+
+        // GET BOOKING API BY QUERY
+        app.get('/booking/:email', async(req, res) =>{
+            const email = req.params.email;
+            const  query = {Email: email}
+            const booking = await bookingCollection.find(query).toArray();
+            res.json(booking)
+        })
+
+        //DELETE BOOKING API
+        app.delete('/booking/:id', async (req, res) => {
             const id = req.params.id;
-            const query= {_id: ObjectId(id)};
-            const result = await packageCollection.findOne(query);
-            res.json(query)
+            const query = {_id: ObjectId(id)}
+            const booking = await bookingCollection.findOne(query).toArray();
+            res.json(booking)
         })
     }
     finally{
