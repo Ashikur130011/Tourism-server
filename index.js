@@ -1,14 +1,15 @@
 const express = require('express')
 const { MongoClient } = require('mongodb');
+const ObjectId = require("mongodb").ObjectId;
+
 require('dotenv').config();
 var cors = require("cors");
 
 const app = express()
 const port = process.env.PORT || 5000
 
-const ObjectId = require("mongodb").ObjectId;
-
 //Middleware
+app.use(cors())
 app.use(express.json())
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.tv45h.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
@@ -20,6 +21,7 @@ async function run() {
         await client.connect();
         const database = client.db('The-Travel');
         const packageCollection = database.collection('package');
+        console.log('database connected');
 
         //GET API
         app.get('/packages', async (req, res) => {
