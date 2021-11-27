@@ -87,7 +87,7 @@ async function run() {
             res.json(comment)
         })
 
-        //GET COMMENT
+        //GET
         app.get('/comments', async (req, res) => {
             const cursor = commentCollection.find({});
             const comment = await cursor.toArray();
