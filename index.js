@@ -6,7 +6,7 @@ require('dotenv').config();
 var cors = require("cors");
 
 const app = express()
-const port = process.env.PORT || 5000
+const port = process.env.PORT || 7000
 
 //Middleware
 app.use(cors())
@@ -21,7 +21,8 @@ async function run() {
         await client.connect();
         const database = client.db('The-Travel');
         const packageCollection = database.collection('package');
-        const bookingCollection = database.collection('booking')
+        const bookingCollection = database.collection('booking');
+        const commentCollection = database.collection('comments')
         console.log('database connected');
 
         //GET PACKAGE API
@@ -78,6 +79,19 @@ async function run() {
             const booking = await bookingCollection.deleteOne(query);
             console.log(booking);
             res.send(booking)
+        })
+        //POST COMMENT
+        app.post('/comments', async (req, res) => {
+            const cursor = req.body;
+            const comment = await commentCollection.insertOne(cursor)
+            res.json(comment)
+        })
+
+        //GET COMMENT
+        app.get('/comments', async (req, res) => {
+            const cursor = commentCollection.find({});
+            const comment = await cursor.toArray();
+            res.json(comment);
         })
     }
     finally{
